@@ -7,6 +7,7 @@ ctk.set_default_color_theme('dark-blue')
 
 
 TOPIC = None
+RUNNING = None
 
 logo = CTkImage(light_image=Image.open('images/icon.png'),
                 dark_image=Image.open('images/icon.png'),
@@ -31,11 +32,11 @@ def main_app():
     window = CTk()
     center_window(window)
 
+    side_frame = CTkFrame(window)
+    side_frame.pack()
 
-def add_flashcards():
 
-    def update_data():
-        pass
+def add_flashcards(master):
 
     subjects = ['Python', 'Javascript']
 
@@ -109,10 +110,18 @@ def starting_page():
     main_window = CTk()
     center_window(main_window)
 
+    def launch_app():
+        end()
+        main_app()
+
+    def add():
+        global RUNNING
+        add_running = add_flashcards(main_window)
+        RUNNING = add_running
+
     def end():
-
+        main_window.destroy()
         main_window.quit()
-
     # ------ labels
 
     # the icon still bad and i dont have money for photoshop
@@ -122,11 +131,11 @@ def starting_page():
     # ----- buttons
 
     start_btn = CTkButton(main_window, text='Start', width=200,
-                          height=50, corner_radius=32, fg_color='transparent',  border_color='#496989', border_width=3, command=main_app())
+                          height=50, corner_radius=32, fg_color='transparent',  border_color='#496989', border_width=3, command=launch_app)
     start_btn.grid(column=1, row=1, padx=10, pady=10)
 
     add_btn = CTkButton(main_window, text='Add Flashcards',
-                        corner_radius=32, fg_color='transparent',  border_color='#496989', border_width=2, command=add_flashcards)
+                        corner_radius=32, fg_color='transparent',  border_color='#496989', border_width=2, command=add)
     add_btn.grid(column=0, row=1, padx=10, pady=10)
 
     quit_btn = CTkButton(main_window, text='Quit',
