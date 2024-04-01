@@ -13,10 +13,17 @@ logo = CTkImage(light_image=Image.open('images/icon.png'),
                 dark_image=Image.open('images/icon.png'),
                 size=(200, 200))
 
+check = CTkImage(light_image=Image.open('images/check.png'),
+                 dark_image=Image.open('images/check.png'),
+                 size=(100, 100))
+
+wrong = CTkImage(light_image=Image.open('images/wrong.png'),
+                 dark_image=Image.open('images/wrong.png'),
+                 size=(100, 100))
+
 
 def center_window(window, width=650, height=500):
     window.title('Flashcards')
-    window.config(padx=50, pady=50)
     # get screen width and height
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
@@ -32,10 +39,36 @@ def main_app():
     window = CTk()
     center_window(window)
 
-    side_frame = CTkFrame(window)
-    side_frame.pack()
+    # ------- Frames
+
+    main_frame = CTkFrame(window, width=500, height=500,
+                          fg_color='#31363F', corner_radius=0)
+    main_frame.pack(side='right')
+    main_frame.grid_propagate(False)
+
+    side_frame = CTkFrame(window, width=190, height=500,
+                          fg_color='#222831', corner_radius=0)
+    side_frame.pack(side='left')
+    side_frame.grid_propagate(False)
+
+    # ------- Buttons
+
+    flashcard = CTkButton(main_frame, text='Flashcard',
+                          height=275, width=400, fg_color='#50727B')
+    flashcard.grid(column=0, row=0, columnspan=3, padx=50, pady=40)
+
+    check_btn = CTkButton(main_frame, text='', image=check, width=50)
+    check_btn.grid(column=2, row=1, padx=10, pady=20)
+
+    wrong_btn = CTkButton(main_frame, text='', image=wrong, width=50)
+    wrong_btn.grid(column=0, row=1, padx=10, pady=20)
+
+    skip_btn = CTkButton(main_frame, text='skip',
+                         width=150, fg_color='#50727B')
+    skip_btn.grid(column=1, row=1, padx=20, pady=20)
 
     window.mainloop()
+
 
 def add_flashcards(master):
 
@@ -111,6 +144,7 @@ def starting_page():
 
     main_window = CTk()
     center_window(main_window)
+    main_window.config(padx=50, pady=50)
 
     def launch_app():
         end()
@@ -122,6 +156,7 @@ def starting_page():
     def end():
         main_window.destroy()
         main_window.quit()
+
     # ------ labels
 
     # the icon still bad and i dont have money for photoshop
@@ -145,4 +180,4 @@ def starting_page():
     main_window.mainloop()
 
 
-starting_page()
+main_app()
