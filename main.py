@@ -7,7 +7,7 @@ ctk.set_default_color_theme('dark-blue')
 
 
 TOPIC = None
-RUNNING = None
+
 
 logo = CTkImage(light_image=Image.open('images/icon.png'),
                 dark_image=Image.open('images/icon.png'),
@@ -35,6 +35,7 @@ def main_app():
     side_frame = CTkFrame(window)
     side_frame.pack()
 
+    window.mainloop()
 
 def add_flashcards(master):
 
@@ -58,6 +59,7 @@ def add_flashcards(master):
     add_window.geometry("550x300")
     add_window.title('Add flashcards')
     add_window.config(padx=20, pady=20)
+    add_window.wm_transient(master)
     move_window()
 
     # ------ Labels
@@ -115,9 +117,7 @@ def starting_page():
         main_app()
 
     def add():
-        global RUNNING
-        add_running = add_flashcards(main_window)
-        RUNNING = add_running
+        add_flashcards(main_window)
 
     def end():
         main_window.destroy()
