@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from customtkinter import *
 from PIL import Image
+from tkinter import PhotoImage
 
 ctk.set_appearance_mode('dark')
 ctk.set_default_color_theme('dark-blue')
@@ -12,9 +13,6 @@ RUNNING = None
 logo = CTkImage(light_image=Image.open('images/icon.png'),
                 dark_image=Image.open('images/icon.png'),
                 size=(200, 200))
-
-check = CTkImage(light_image=Image.open('images/check.png'),
-                 dark_image=Image.open('images/check.png'))
 
 
 def center_window(window, width=650, height=500):
@@ -107,26 +105,27 @@ def main_app():
     main_frame = CTkFrame(main_window, height=500,
                           width=550, fg_color='#222831', corner_radius=0)
     main_frame.pack(side='right')
+    main_frame.propagate(False)
 
     side_frame = CTkFrame(main_window, fg_color='#31363F',
                           border_width=2, height=500, width=170, corner_radius=0)
     side_frame.pack(side='left')
+    side_frame.propagate(False)
 
     # --------Buttons
 
     flashcard_btn = CTkButton(main_frame)
     flashcard_btn.grid(column=0, row=0, columnspan=3, padx=20, pady=50)
 
-    check_btn = CTkButton(main_frame)
+    check_img = CTkCanvas(main_frame, background=check)
+    check_btn = CTkButton(main_frame, image=check_img)
     check_btn.grid(column=2,  row=1, padx=20, pady=50)
 
-    wrong_btn = CTkButton(main_frame, image=check)
+    wrong_btn = CTkButton(main_frame, image=check_img)
     wrong_btn.grid(column=0,  row=1, padx=20, pady=50)
 
     skip_btn = CTkButton(main_frame, text='Skip')
     skip_btn.grid(column=1,  row=1, padx=20, pady=50)
-
-    # -------Labels
 
     main_window.mainloop()
 
