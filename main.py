@@ -180,4 +180,4 @@ def starting_page():
     main_window.mainloop()
 
 
-main_app()
+starting_page()
