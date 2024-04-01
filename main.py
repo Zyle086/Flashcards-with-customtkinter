@@ -7,6 +7,7 @@ ctk.set_default_color_theme('dark-blue')
 
 
 TOPIC = None
+MODES = ['Light', 'Dark']
 
 
 logo = CTkImage(light_image=Image.open('images/icon.png'),
@@ -37,25 +38,28 @@ def center_window(window, width=650, height=500):
 def main_app():
 
     window = CTk()
-    center_window(window)
+    center_window(window, width=800)
+
+    def selected_mode(mode):
+        print(mode)
 
     # ------- Frames
 
-    main_frame = CTkFrame(window, width=500, height=500,
+    main_frame = CTkFrame(window, width=640, height=500,
                           fg_color='#31363F', corner_radius=0)
     main_frame.pack(side='right')
     main_frame.grid_propagate(False)
 
-    side_frame = CTkFrame(window, width=190, height=500,
+    side_frame = CTkFrame(window, width=160, height=500,
                           fg_color='#222831', corner_radius=0)
     side_frame.pack(side='left')
-    side_frame.grid_propagate(False)
+    side_frame.pack_propagate(False)
 
     # ------- Buttons
 
     flashcard = CTkButton(main_frame, text='Flashcard',
                           height=275, width=400, fg_color='#50727B')
-    flashcard.grid(column=0, row=0, columnspan=3, padx=50, pady=40)
+    flashcard.grid(column=0, row=0, columnspan=3, padx=125, pady=40)
 
     check_btn = CTkButton(main_frame, text='', image=check, width=50)
     check_btn.grid(column=2, row=1, padx=10, pady=20)
@@ -64,10 +68,24 @@ def main_app():
     wrong_btn.grid(column=0, row=1, padx=10, pady=20)
 
     skip_btn = CTkButton(main_frame, text='skip',
-                         width=150, fg_color='#50727B')
-    skip_btn.grid(column=1, row=1, padx=20, pady=20)
+                         width=200, height=100, fg_color='#50727B')
+    skip_btn.grid(column=1, row=1, padx=10, pady=10)
+
+    # ------- Menu
+
+    appearance_menu = CTkOptionMenu(side_frame, values=MODES,
+                                    width=120, command=selected_mode)
+    appearance_menu.pack(side='bottom', padx=10, pady=20)
+    appearance_menu.set('Mode')
+
+    # ------ Labels
+
+    appearance_lbl = CTkLabel(side_frame, text='Appearance')
+    appearance_lbl.pack(side='bottom', padx=10)
 
     window.mainloop()
+
+    # design later layout first
 
 
 def add_flashcards(master):
