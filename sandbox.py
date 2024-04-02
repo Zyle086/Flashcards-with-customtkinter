@@ -23,5 +23,12 @@ Flashcard project:
     - return a result 
     - 
 """
+import pandas
+data = {
+    'python': [['Adding but in coding terms', 'Concatenating'], ['Function that is inside a function', 'Nested Function']],
+    'javascript': [['print() in javascript', 'console.log()'], ['Question', 'Answer']]
+}
 
 
+data_df = pandas.DataFrame(data)
+data_df.to_csv('data/data.csv')

@@ -2,14 +2,16 @@ import customtkinter as ctk
 from customtkinter import *
 from PIL import Image
 import pandas
+import random
 
 ctk.set_appearance_mode('dark')
 ctk.set_default_color_theme('dark-blue')
 
 
-TOPIC = None
+TOPICS = ['Python', 'Javascript']
 MODES = ['Light', 'Dark']
-
+current_topic = None
+current_question = []
 
 logo = CTkImage(light_image=Image.open('images/icon.png'),
                 dark_image=Image.open('images/icon.png'),
@@ -24,8 +26,9 @@ wrong = CTkImage(light_image=Image.open('images/wrong.png'),
                  size=(100, 100))
 
 
-def center_window(window, width=650, height=500):
+def center_window(window, width=650, height=500, x=0, y=0):
     window.title('Flashcards')
+    window.config(padx=x, pady=y)
     # get screen width and height
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
@@ -41,6 +44,14 @@ def main_app():
     window = CTk()
     center_window(window, width=800)
 
+    flashcard_data = pandas.read_csv('data/data.csv')[current_topic].to_list()
+    done = []
+    flashcard = random.choice(flashcard_data)
+    question = flashcard[0]
+    answer = flashcard[1]
+    print(flashcard)
+
+     
     def selected_mode(mode):
         print(mode)
 
@@ -58,9 +69,9 @@ def main_app():
 
     # ------- Buttons
 
-    flashcard = CTkButton(main_frame, text='Flashcard',
-                          height=275, width=400, fg_color='#50727B')
-    flashcard.grid(column=0, row=0, columnspan=3, padx=125, pady=40)
+    flashcard_btn = CTkButton(main_frame, text=f"{question}",
+                              height=275, width=400, fg_color='#50727B')
+    flashcard_btn.grid(column=0, row=0, columnspan=3, padx=125, pady=40)
 
     check_btn = CTkButton(main_frame, text='', image=check, width=50)
     check_btn.grid(column=2, row=1, padx=10, pady=20)
@@ -164,17 +175,39 @@ def starting_page():
     main_window = CTk()
     center_window(main_window)
     main_window.config(padx=50, pady=50)
+    radio_var = StringVar()
 
-    def launch_app():
-        end()
-        main_app()
+    def selected_topic():
+        global current_topic
+        current_topic = radio_var.get()
+
+    def choose_topic():
+
+        def launch_app():
+            end(window)
+            main_app()
+
+        end(main_window)
+        window = CTk()
+        center_window(window=window, width=200,
+                      height=len(TOPICS)*100, x=10, y=10)
+        window.title('Choose')
+
+        for subject in TOPICS:
+            topic = CTkRadioButton(
+                window, text=subject, command=selected_topic, variable=radio_var, value=subject)
+            topic.pack(padx=10, pady=10)
+
+        start_btn = CTkButton(window, text='Start', command=launch_app)
+        start_btn.pack(pady=10, side='bottom')
+        window.mainloop()
 
     def add():
         add_flashcards(main_window)
 
-    def end():
-        main_window.destroy()
-        main_window.quit()
+    def end(window):
+        window.destroy()
+        window.quit()
 
     # ------ labels
 
@@ -185,7 +218,7 @@ def starting_page():
     # ----- buttons
 
     start_btn = CTkButton(main_window, text='Start', width=200,
-                          height=50, corner_radius=32, fg_color='transparent',  border_color='#496989', border_width=3, command=launch_app)
+                          height=50, corner_radius=32, fg_color='transparent',  border_color='#496989', border_width=3, command=choose_topic)
     start_btn.grid(column=1, row=1, padx=10, pady=10)
 
     add_btn = CTkButton(main_window, text='Add Flashcards',
@@ -199,4 +232,4 @@ def starting_page():
     main_window.mainloop()
 
 
-main_app()
+starting_page()
