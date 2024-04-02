@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from customtkinter import *
 from PIL import Image
+import pandas
 
 ctk.set_appearance_mode('dark')
 ctk.set_default_color_theme('dark-blue')
@@ -198,4 +199,4 @@ def starting_page():
     main_window.mainloop()
 
 
-starting_page()
+main_app()
