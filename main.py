@@ -3,13 +3,14 @@ from customtkinter import *
 from PIL import Image
 import pandas
 import random
+import os
 
 ctk.set_appearance_mode('dark')
 ctk.set_default_color_theme('dark-blue')
 
 
-TOPIC = None
 MODES = ['Light', 'Dark']
+TOPICS = []
 
 
 logo = CTkImage(light_image=Image.open('images/icon.png'),
@@ -23,6 +24,12 @@ check = CTkImage(light_image=Image.open('images/check.png'),
 wrong = CTkImage(light_image=Image.open('images/wrong.png'),
                  dark_image=Image.open('images/wrong.png'),
                  size=(100, 100))
+
+
+def get_topics():
+    subjects = os.listdir('data')
+    for file in subjects:
+        TOPICS.append(file.strip('.csv').capitalize())
 
 
 def center_window(window, width=650, height=500):
@@ -96,7 +103,8 @@ def main_app():
 
 def add_flashcards(master):
 
-    subjects = ['Python', 'Javascript']
+    get_topics()
+    subjects = TOPICS
 
     def move_window(width=550, height=300):
         # get screen width and height
@@ -109,8 +117,7 @@ def add_flashcards(master):
         add_window.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
     def selected_sub(selected):
-        global TOPIC
-        TOPIC = selected
+        pass
 
     add_window = CTkToplevel()
     add_window.geometry("550x300")
