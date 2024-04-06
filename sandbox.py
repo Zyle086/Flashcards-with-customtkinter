@@ -24,24 +24,7 @@ Flashcard project:
     - 
 """
 
-# import pandas
-# python = {
-#     'questions': ['Another term for adding strings to a single string', 'Another term for an array'],
-#     'answers': ['Concatenating', 'List']
-# }
+from CTkMessagebox import CTkMessagebox
 
-# javascript = {
-#     'questions': ['The equivalent of print in JS', 'question'],
-#     'answers': ['console.log()', 'answer']
-# }
-
-# dicts = (python, javascript)
-# u = ('python.csv', 'javascript.csv')
-# i = 0
-
-# for dct in dicts:
-#     dct_df = pandas.DataFrame(dct)
-#     dct_df.to_csv(f"data/{u[i]}")
-#     i += 1
-
-# just for remembrance
+message = CTkMessagebox(title= 'title', message='Hello')
+message.mainloop()

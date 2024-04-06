@@ -4,7 +4,7 @@ from PIL import Image
 import pandas
 import random
 import os
-
+from CTkMessagebox import CTkMessagebox
 ctk.set_appearance_mode('dark')
 ctk.set_default_color_theme('dark-blue')
 
@@ -35,6 +35,12 @@ def get_topics():
 
 
 TOPICS = get_topics()
+print(TOPICS)
+
+
+def end(window):
+    window.destroy()
+    window.quit()
 
 
 def center_window(window, width=650, height=500, padx=0, pady=0):
@@ -185,11 +191,20 @@ def starting_page():
 
     def choose_topic():
 
-        def selected_topic(topic):
+        def selected_topic():
             global CURRENT_TOPIC
-            CURRENT_TOPIC = topic
-            print(CURRENT_TOPIC)
-            
+            CURRENT_TOPIC = radio_var.get()
+
+        def done_choosing():
+            end(window=window)
+            if CURRENT_TOPIC is None:  # if true send info if not launch main app
+                CTkMessagebox(
+                    title="Error", message='Please choose a topic', icon='warning')
+                choose_topic()
+            else:
+                end(main_window)
+                main_app(topic=CURRENT_TOPIC)
+
         window = CTk()
         radio_var = StringVar()
         center_window(window=window, width=300,
@@ -201,22 +216,18 @@ def starting_page():
                 window, text=subject, command=selected_topic, variable=radio_var, value=subject)
             topic.pack(padx=10, pady=10)
 
-        done = CTkButton(window, text='Done')
+        done = CTkButton(window, text='Done', command=done_choosing)
         done.pack(side='bottom', pady=20)
 
         window.mainloop()
 
     def launch_app():
-        end()
-        topic = choose_topic()
-        main_app(topic=topic)
+
+        choose_topic()
+        
 
     def add():
         add_flashcards(main_window)
-
-    def end():
-        main_window.destroy()
-        main_window.quit()
 
     # ------ labels
 
@@ -235,7 +246,7 @@ def starting_page():
     add_btn.grid(column=0, row=1, padx=10, pady=10)
 
     quit_btn = CTkButton(main_window, text='Quit',
-                         corner_radius=32, fg_color='transparent',  border_color='#496989', border_width=2, command=end)
+                         corner_radius=32, fg_color='transparent',  border_color='#496989', border_width=2, command=quit)
     quit_btn.grid(column=2, row=1, padx=10, pady=10)
 
     main_window.mainloop()
