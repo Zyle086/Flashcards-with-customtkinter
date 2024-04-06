@@ -10,7 +10,7 @@ ctk.set_default_color_theme('dark-blue')
 
 
 MODES = ['Light', 'Dark']
-TOPICS = []
+CURRENT_TOPIC = None
 
 
 logo = CTkImage(light_image=Image.open('images/icon.png'),
@@ -28,12 +28,18 @@ wrong = CTkImage(light_image=Image.open('images/wrong.png'),
 
 def get_topics():
     subjects = os.listdir('data')
+    topics = []
     for file in subjects:
-        TOPICS.append(file.strip('.csv').capitalize())
+        topics.append(file.strip('.csv').capitalize())
+    return topics
 
 
-def center_window(window, width=650, height=500):
+TOPICS = get_topics()
+
+
+def center_window(window, width=650, height=500, padx=0, pady=0):
     window.title('Flashcards')
+    window.config(padx=padx, pady=pady)
     # get screen width and height
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
@@ -178,7 +184,27 @@ def starting_page():
     main_window.config(padx=50, pady=50)
 
     def choose_topic():
-        pass
+
+        def selected_topic(topic):
+            global CURRENT_TOPIC
+            CURRENT_TOPIC = topic
+            print(CURRENT_TOPIC)
+            
+        window = CTk()
+        radio_var = StringVar()
+        center_window(window=window, width=300,
+                      height=len(TOPICS)*100, padx=10, pady=10)
+        window.title('Choose')
+
+        for subject in TOPICS:
+            topic = CTkRadioButton(
+                window, text=subject, command=selected_topic, variable=radio_var, value=subject)
+            topic.pack(padx=10, pady=10)
+
+        done = CTkButton(window, text='Done')
+        done.pack(side='bottom', pady=20)
+
+        window.mainloop()
 
     def launch_app():
         end()
