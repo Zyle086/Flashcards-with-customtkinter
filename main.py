@@ -2,6 +2,7 @@ import customtkinter as ctk
 from customtkinter import *
 from PIL import Image
 import pandas
+import random
 
 ctk.set_appearance_mode('dark')
 ctk.set_default_color_theme('dark-blue')
@@ -40,6 +41,10 @@ def main_app():
 
     window = CTk()
     center_window(window, width=800)
+
+    def random_question():
+
+        flashcard = None
 
     def selected_mode(mode):
         print(mode)
@@ -199,4 +204,4 @@ def starting_page():
     main_window.mainloop()
 
 
-main_app()
+starting_page()
