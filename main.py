@@ -44,7 +44,7 @@ def center_window(window, width=650, height=500):
     window.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
 
-def main_app():
+def main_app(topic):
 
     window = CTk()
     center_window(window, width=800)
@@ -177,9 +177,13 @@ def starting_page():
     center_window(main_window)
     main_window.config(padx=50, pady=50)
 
+    def choose_topic():
+        pass
+
     def launch_app():
         end()
-        main_app()
+        topic = choose_topic()
+        main_app(topic=topic)
 
     def add():
         add_flashcards(main_window)
