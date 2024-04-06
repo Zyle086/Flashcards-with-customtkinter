@@ -35,7 +35,6 @@ def get_topics():
 
 
 TOPICS = get_topics()
-print(TOPICS)
 
 
 def end(window):
@@ -224,7 +223,6 @@ def starting_page():
     def launch_app():
 
         choose_topic()
-        
 
     def add():
         add_flashcards(main_window)
