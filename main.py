@@ -189,7 +189,7 @@ def starting_page():
 
         end(main_window)
         window = CTk()
-        center_window(window=window, width=200,
+        center_window(window=window, width=300,
                       height=len(TOPICS)*100, x=10, y=10)
         window.title('Choose')
 
