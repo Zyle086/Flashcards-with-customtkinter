@@ -23,8 +23,3 @@ Flashcard project:
     - return a result 
     - 
 """
-
-from CTkMessagebox import CTkMessagebox
-
-message = CTkMessagebox(title= 'title', message='Hello')
-message.mainloop()

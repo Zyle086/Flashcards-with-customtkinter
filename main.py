@@ -59,13 +59,18 @@ def main_app(topic):
 
     window = CTk()
     center_window(window, width=800)
-
+    
     def random_question():
-
-        flashcard = None
+        flashcard_data = pandas.read_csv(f"data/{topic}.csv").to_dict()
+        random_pairnum = random.randint(0, len(flashcard_data['questions']))
+        question = flashcard_data['questions'][random_pairnum]
+        answer = flashcard_data['answers'][random_pairnum]
+        return question, answer
 
     def selected_mode(mode):
         print(mode)
+    
+    current_question, current_answer = random_question()
 
     # ------- Frames
 
@@ -81,7 +86,7 @@ def main_app(topic):
 
     # ------- Buttons
 
-    flashcard = CTkButton(main_frame, text='Flashcard',
+    flashcard = CTkButton(main_frame, text=current_question,
                           height=275, width=400, fg_color='#50727B')
     flashcard.grid(column=0, row=0, columnspan=3, padx=125, pady=40)
 
@@ -188,7 +193,7 @@ def starting_page():
     center_window(main_window)
     main_window.config(padx=50, pady=50)
 
-    def choose_topic():
+    def launch_app():
 
         def selected_topic():
             global CURRENT_TOPIC
@@ -199,7 +204,7 @@ def starting_page():
             if CURRENT_TOPIC is None:  # if true send info if not launch main app
                 CTkMessagebox(
                     title="Error", message='Please choose a topic', icon='warning')
-                choose_topic()
+                launch_app()
             else:
                 end(main_window)
                 main_app(topic=CURRENT_TOPIC)
@@ -219,10 +224,6 @@ def starting_page():
         done.pack(side='bottom', pady=20)
 
         window.mainloop()
-
-    def launch_app():
-
-        choose_topic()
 
     def add():
         add_flashcards(main_window)
@@ -250,4 +251,4 @@ def starting_page():
     main_window.mainloop()
 
 
-starting_page()
+main_app(random.choice(TOPICS))
