@@ -62,7 +62,12 @@ def main_app(topic):
     flashcard_data = pandas.read_csv(f"data/{topic}.csv").to_dict()
 
     def random_question(**kwargs):
-        while True:  # try
+        nonlocal current_question, current_answer, current
+        print(len(done), len(flashcard_data)-1)
+        if len(done) > len(flashcard_data)-1:
+            end(window=window)
+            return
+        while True:
             random_pairnum = random.randint(
                 0, len(flashcard_data['questions'])-1)
             if random_pairnum in done:
@@ -75,14 +80,14 @@ def main_app(topic):
             flashcard.configure(text=question)
         except NameError:
             pass
-        return question, answer
+        current_question, current_answer, current = question, answer, question
 
     def selected_mode(mode):
         print(mode)
 
     done = []
-    current_question, current_answer = random_question()
-    current = current_question
+    current_question, current_answer, current = None, None, None
+    random_question()
 
     def flip_flashcard():
         nonlocal current
