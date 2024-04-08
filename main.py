@@ -25,6 +25,10 @@ wrong = CTkImage(light_image=Image.open('images/wrong.png'),
                  dark_image=Image.open('images/wrong.png'),
                  size=(100, 100))
 
+finished = CTkImage(light_image=Image.open('images/finished.png'),
+                    dark_image=Image.open('images/finished.png'),
+                    size=(200, 200))
+
 
 def get_topics():
     subjects = os.listdir('data')
@@ -37,9 +41,37 @@ def get_topics():
 TOPICS = get_topics()
 
 
+def all_children(window):
+    _list = window.winfo_children()
+
+    for i in _list:
+        if i.winfo_children():
+            _list.extend(i.winfo_children())
+    return _list
+
+
 def end(window):
     window.destroy()
     window.quit()
+
+
+def app_finished(frame, window):
+
+    def close_app():
+        window.destroy()
+        window.quit()
+
+    done_img = CTkLabel(master=frame, text='', image=finished, width=400)
+    done_img.grid(column=0, row=0, columnspan=3, padx=50, pady=50)
+
+    right_lbl = CTkLabel(master=frame, text='Correct : ')
+    right_lbl.grid(column=0, row=1, padx=75, pady=20)
+
+    wrong_lbl = CTkLabel(master=frame, text='Mistakes : ')
+    wrong_lbl.grid(column=2, row=1, pady=20)
+
+    quit_btn = CTkButton(master=frame, text='Quit', command=close_app)
+    quit_btn.grid(column=1, row=2, padx=20, pady=20)
 
 
 def center_window(window, width=650, height=500, padx=0, pady=0):
@@ -63,9 +95,13 @@ def main_app(topic):
 
     def random_question(**kwargs):
         nonlocal current_question, current_answer, current
-        print(len(done), len(flashcard_data)-1)
-        if len(done) > len(flashcard_data)-1:
-            end(window=window)
+
+        if len(done) >= 2:  # the number of questions til end
+
+            widget_list = all_children(window=main_frame)
+            for item in widget_list:
+                item.grid_forget()
+            app_finished(main_frame, window)
             return
         while True:
             random_pairnum = random.randint(
@@ -86,6 +122,7 @@ def main_app(topic):
         print(mode)
 
     done = []
+    answers = []
     current_question, current_answer, current = None, None, None
     random_question()
 
@@ -105,16 +142,16 @@ def main_app(topic):
         random_question()
 
     def wrong_answer():
-        next_flashcard('wrong')
+        next_flashcard(answer='wrong')
 
     def right_answer():
-        next_flashcard('right')
+        next_flashcard(answer='right')
 
     # ------- Frames
 
     main_frame = CTkFrame(window, width=640, height=500,
                           fg_color='#31363F', corner_radius=0)
-    main_frame.pack(side='right')
+    main_frame.pack(side='right', ipadx=10, ipady=50)
     main_frame.grid_propagate(False)
 
     side_frame = CTkFrame(window, width=160, height=500,
@@ -240,6 +277,7 @@ def starting_page():
             CURRENT_TOPIC = radio_var.get()
 
         def done_choosing():
+
             end(window=window)
             if CURRENT_TOPIC is None:  # if true send info if not launch main app
                 CTkMessagebox(
@@ -291,4 +329,4 @@ def starting_page():
     main_window.mainloop()
 
 
-main_app(random.choice(TOPICS))
+starting_page()
