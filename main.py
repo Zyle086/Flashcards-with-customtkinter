@@ -59,18 +59,51 @@ def main_app(topic):
 
     window = CTk()
     center_window(window, width=800)
-    
-    def random_question():
-        flashcard_data = pandas.read_csv(f"data/{topic}.csv").to_dict()
-        random_pairnum = random.randint(0, len(flashcard_data['questions']))
+    flashcard_data = pandas.read_csv(f"data/{topic}.csv").to_dict()
+
+    def random_question(**kwargs):
+        while True:  # try
+            random_pairnum = random.randint(
+                0, len(flashcard_data['questions'])-1)
+            if random_pairnum in done:
+                continue
+            break
         question = flashcard_data['questions'][random_pairnum]
         answer = flashcard_data['answers'][random_pairnum]
+        done.append(random_pairnum)
+        try:
+            flashcard.configure(text=question)
+        except NameError:
+            pass
         return question, answer
 
     def selected_mode(mode):
         print(mode)
-    
+
+    done = []
     current_question, current_answer = random_question()
+    current = current_question
+
+    def flip_flashcard():
+        nonlocal current
+        print(done)
+        if current == current_question:
+            flashcard.configure(text=current_answer)
+            current = current_answer
+            return
+        if current == current_answer:
+            flashcard.configure(text=current_question)
+            current = current_question
+            return
+
+    def next_flashcard(answer):
+        random_question()
+
+    def wrong_answer():
+        next_flashcard('wrong')
+
+    def right_answer():
+        next_flashcard('right')
 
     # ------- Frames
 
@@ -87,13 +120,15 @@ def main_app(topic):
     # ------- Buttons
 
     flashcard = CTkButton(main_frame, text=current_question,
-                          height=275, width=400, fg_color='#50727B')
+                          height=275, width=400, fg_color='#50727B', command=flip_flashcard)
     flashcard.grid(column=0, row=0, columnspan=3, padx=125, pady=40)
 
-    check_btn = CTkButton(main_frame, text='', image=check, width=50)
+    check_btn = CTkButton(main_frame, text='', image=check,
+                          width=50, command=right_answer)
     check_btn.grid(column=2, row=1, padx=10, pady=20)
 
-    wrong_btn = CTkButton(main_frame, text='', image=wrong, width=50)
+    wrong_btn = CTkButton(main_frame, text='', image=wrong,
+                          width=50, command=wrong_answer)
     wrong_btn.grid(column=0, row=1, padx=10, pady=20)
 
     skip_btn = CTkButton(main_frame, text='skip',
