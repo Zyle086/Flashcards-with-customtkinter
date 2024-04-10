@@ -27,7 +27,7 @@ wrong = CTkImage(light_image=Image.open('images/wrong.png'),
 
 finished = CTkImage(light_image=Image.open('images/finished.png'),
                     dark_image=Image.open('images/finished.png'),
-                    size=(200, 200))
+                    size=(250, 250))
 
 
 def get_topics():
@@ -128,7 +128,6 @@ def main_app(topic):
 
     def flip_flashcard():
         nonlocal current
-        print(done)
         if current == current_question:
             flashcard.configure(text=current_answer)
             current = current_answer
@@ -150,12 +149,12 @@ def main_app(topic):
     # ------- Frames
 
     main_frame = CTkFrame(window, width=640, height=500,
-                          fg_color='#31363F', corner_radius=0)
+                          fg_color='#151515', corner_radius=0)
     main_frame.pack(side='right', ipadx=10, ipady=50)
     main_frame.grid_propagate(False)
 
     side_frame = CTkFrame(window, width=160, height=500,
-                          fg_color='#222831', corner_radius=0)
+                          fg_color='#1A1A1B', corner_radius=0)
     side_frame.pack(side='left')
     side_frame.pack_propagate(False)
 
