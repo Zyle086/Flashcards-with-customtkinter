@@ -276,7 +276,6 @@ def starting_page():
             CURRENT_TOPIC = radio_var.get()
 
         def done_choosing():
-
             end(window=window)
             if CURRENT_TOPIC is None:  # if true send info if not launch main app
                 CTkMessagebox(
