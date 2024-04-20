@@ -194,38 +194,89 @@ def main_app(topic):
 
 
 def add_flashcards(master):
+    # goal is to finish the add flashcards window
+    subjects = get_topics()
+    selected_topic = None
 
-    get_topics()
-    subjects = TOPICS
-
-    def move_window(width=550, height=300):
+    def move_window(master, window, width=550, height=300, padx=0, pady=0):
         # get screen width and height
-        screen_width = add_window.winfo_screenwidth()
-        screen_height = add_window.winfo_screenheight()
+        window.config(padx=padx, pady=pady)
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
 
         # calculate position x and y coordinates
         x = screen_width - width - 50
         y = (screen_height/2) - height
-        add_window.geometry('%dx%d+%d+%d' % (width, height, x, y))
+        window.geometry('%dx%d+%d+%d' % (width, height, x, y))
+        window.wm_transient(master)
 
     def selected_sub(selected):
-        pass
+        nonlocal selected_topic
+        selected_topic = selected
+
+    def add_topic():
+
+        def added_topic():
+            new_topic = topic_entry.get().capitalize()
+            msg = CTkMessagebox(
+                title='Info', message=f"Are you sure you want to add {new_topic}?", option_2='Ok', option_1='Cancel')
+            response = msg.get()
+
+            if response == 'Ok':
+                # if the file exists make one else tell them it already exists
+                with open(f"data/{new_topic}.csv", 'w') as file:
+                    file.write('questions,answers\n')
+                topic_entry.delete(0, "end")
+
+        def done_adding():
+            end(topic_window)
+            end(add_window)
+            add_flashcards(master=master)
+
+        topic_window = CTkToplevel()
+        topic_window.title('Add Topic')
+        center_window(window=topic_window, width=350,
+                      height=200, padx=20, pady=20)
+        topic_window.wm_transient(master=add_window)
+
+        topic_entry = CTkEntry(
+            master=topic_window, placeholder_text='What topic do you want to add', width=200)
+        topic_entry.grid(column=0, row=0, padx=20, pady=20)
+
+        done_btn1 = CTkButton(master=topic_window,
+                              text='Done', command=done_adding)
+        done_btn1.grid(column=0, row=1, padx=20, pady=20)
+
+        add_btn = CTkButton(master=topic_window, text='Add',
+                            width=10, command=added_topic)
+        add_btn.grid(column=1, row=0, padx=20, pady=20)
+
+    def finished():
+        end(add_window)
+
+    def add_question():
+        question, answer = question_entry.get().capitalize(), answer_entry.get().capitalize()
+
+        if question and answer:
+            data = {'questions': [question], 'answers': [answer]}
+            df = pandas.DataFrame(data)
+            df.to_csv(f"data/{selected_topic}.csv",
+                      mode='a', index=False, header=False)
+            question_entry.delete(0, 'end')
+            answer_entry.delete(0, 'end')
 
     add_window = CTkToplevel()
-    add_window.geometry("550x300")
     add_window.title('Add flashcards')
-    add_window.config(padx=20, pady=20)
-    add_window.wm_transient(master)
-    move_window()
+    move_window(master=master, window=add_window, padx=20, pady=20)
 
     # ------ Labels
 
     sub_label = CTkLabel(add_window, text='Choose Topic :', font=('Arial', 15))
     sub_label.grid(column=0, row=0, padx=20, pady=20)
 
-    add_question = CTkLabel(
-        add_window, text='Add Question :', font=('Arial', 15))
-    add_question.grid(column=0, row=1, padx=20, pady=20)
+    add_question_lbl = CTkLabel(
+        add_window, text='Question :', font=('Arial', 15))
+    add_question_lbl.grid(column=0, row=1, padx=20, pady=20)
 
     add_answer = CTkLabel(add_window, text='Answer :', font=('Arial', 15))
     add_answer.grid(column=0, row=2, padx=20, pady=20)
@@ -242,15 +293,16 @@ def add_flashcards(master):
 
     # ------ Buttons
 
-    add_btn = CTkButton(add_window, text='Add', width=50)
+    add_btn = CTkButton(add_window, text='Add', width=50, command=add_question)
     add_btn.grid(column=2, row=2, padx=20, pady=20)
 
     done_btn = CTkButton(add_window, text='Done',
-                         width=200, command=add_window.destroy)
+                         width=200, command=finished)
     done_btn.grid(column=1, row=3, columnspan=2, padx=20, pady=20)
 
-    add_topic = CTkButton(add_window, text='Add Topic', width=75)
-    add_topic.grid(column=2, row=0, padx=20, pady=20)
+    topic_btn = CTkButton(add_window, text='Add Topic',
+                          width=75, command=add_topic)
+    topic_btn.grid(column=2, row=0, padx=20, pady=20)
 
     # ------ Menu
 

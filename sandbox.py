@@ -25,3 +25,14 @@ Flashcard project:
     
     
 """
+
+
+'''
+choose topic
+if topic not in the choices we can add one
+once selected the topic
+input the question and answer
+once all the requirements(topic, question, answer) are fulfilled
+clear everything(set topics to choose topic again, clear question and answer entries) 
+
+'''
